@@ -5,11 +5,25 @@ const resultsModal = new bootstrap.Modal(document.getElementById("resultsModal")
 document.getElementById("status").addEventListener("click", e => getStatus(e)); // Make a GET request to the Api URL with the API key
 document.getElementById("submit").addEventListener("click", e => postForm(e)); // POSTing the form to the API
 
+function processOption(form) {
+    let optArray = [];
+
+    for (let entry of form.entries()) {
+        if (entry[0] === "options") {
+            optArray.push(entry[1]);
+        }
+    }
+    form.delete("options");
+
+    form.append("options", optArray.join());
+
+    return form;
+}
 
 //Pass the data to a display function
 
 async function postForm(e) {
-    const form = new FormData(document.getElementById("checksform"));
+    const form = processOption(new FormData(document.getElementById("checksform")));
 
     const response = await fetch(API_URL, {
         method: "POST",
